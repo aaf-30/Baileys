@@ -1,4 +1,3 @@
-
 import { Boom } from '@hapi/boom'
 import { randomBytes } from 'crypto'
 import NodeCache from 'node-cache'
@@ -708,10 +707,10 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 							async() => {
 								if(ws.isOpen) {
 									const encNode = getBinaryNodeChild(node, 'enc')
-									await sendRetryRequest(node, !encNode)
 									if(retryRequestDelayMs) {
 										await delay(retryRequestDelayMs)
 									}
+									await sendRetryRequest(node, !encNode)
 								} else {
 									logger.debug({ node }, 'connection closed, ignoring retry req')
 								}
