@@ -681,7 +681,7 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 			// "missing message from node" fix	
 			logger.debug(node, 'missing body; sending ack then ignoring.')
 			await sendRetryRequest(node)
-			console.log("Permintaan percobaan ulang dikirim...")
+			console.log("Permintaan percobaan ulang dikirim", node.attrs)
 			return
 		}
 		const { fullMessage: msg, category, author, decrypt } = decryptMessageNode(
