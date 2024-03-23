@@ -677,13 +677,7 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 	}
 
 	const handleMessage = async(node: BinaryNode) => {
-		if(getBinaryNodeChild(node, 'unavailable') && !getBinaryNodeChild(node, 'enc')) {
-			// "missing message from node" fix	
-			logger.debug(node, 'missing body; sending ack then ignoring.')
-			await sendRetryRequest(node)
-			console.log("Permintaan percobaan ulang dikirim", node.attrs)
-			return
-		}
+		
 		const { fullMessage: msg, category, author, decrypt } = decryptMessageNode(
 			node,
 			authState.creds.me!.id,
@@ -692,6 +686,9 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 			logger,
 		)
 
+		if(getBinaryNodeChild(node, 'unavailable') && !getBinaryNodeChild(node, 'enc')) {
+			msg.messageStubType = 2
+		}
 		if(msg.message?.protocolMessage?.type === proto.Message.ProtocolMessage.Type.SHARE_PHONE_NUMBER) {
 			if(node.attrs.sender_pn) {
 				ev.emit('chats.phoneNumberShare', { lid: node.attrs.from, jid: node.attrs.sender_pn })
